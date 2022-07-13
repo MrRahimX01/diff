@@ -1,0 +1,44 @@
+#!/bin/python3
+import requests
+import argparse
+import getpass
+import threading
+def banner():
+	print('''
+	     __  _   ___  ___
+	 ___/ / (_) / _/ / _/
+	/ _  / / / / _/ / _/
+	\_,_/ /_/ /_/  /_/
+	''')
+	print("Directory Fuzzing Tool         Version : 1.0.0")
+	print("")
+def scan(word):
+	surl = arg.url+"/"+word
+	try:
+		r = requests.get(surl)
+		if(r.status_code != 404):
+			sword = "/"+word
+			fmt = ('{0:15}{1:30}{2:15}{3:15}'.format("[*] Directory Found : ",sword,"Status Code : ",str(r.status_code)))
+			print(fmt)
+			#print("[*] Directory Found :   /"+word+"\t"+"          Status Code : "+str(r.status_code))
+	except:
+		pass
+def validate(arg):
+	print("URL : "+arg.url)
+	print("List Used : "+arg.list)
+	print("")
+	print("________________________________________________")
+	print("________________________________________________")
+	print("")
+	with open(arg.list, 'r') as list:
+		for line in list:
+			word = line.strip()
+			thread = threading.Thread(target=scan,args=(word,))
+			thread.start()
+if __name__ == '__main__':
+	parser = argparse.ArgumentParser()
+	parser.add_argument("--url",type=str,required=True)
+	parser.add_argument('--list',type=str,required=False,default='/usr/share/diff/list/common.txt')
+	arg = parser.parse_args()
+	banner()
+	validate(arg)
